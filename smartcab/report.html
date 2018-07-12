@@ -12086,7 +12086,7 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 <li><p>For <strong>efficiency</strong> 'waypoint' would be more relevant than 'deadline' because it will tell the direction where the smartcab should move to reach destination whereas I think we can ignore 'deadline' because safety is our priority than efficiency
 . Beacuse if we have less number of actions left to reach the destination i.e. if 'deadline' is less, then we may tend to take a faster route with may have less 'safety'</p>
 </li>
-<li><p>For <strong>safety</strong>: 'light' is most relevant because we should not enter into intersection when light is red. 'left' is also relevant because while turning left when 'light' is green we should first check the left side vehicle traffic. 'oncoming' is relevant because of the 'right to way' rule which give the prefrence to vehicle already in intersection. We can ignore 'right' because that's side vehicle's direction of travel won't have any effect on the action to be taken.</p>
+<li><p>For <strong>safety</strong>: 'light' is most relevant because we should not enter into intersection when light is red. 'left' is also relevant because while turning right at 'red' light we should check left side vehicle should not be coming forward. 'oncoming' is relevant because of smartcab can't turn left when oncoming vehicle wants to go straight or right. We can ignore 'right' because that's side vehicle's direction of travel won't have any effect on the action to be taken.</p>
 </li>
 </ul>
 
@@ -12124,8 +12124,8 @@ next_waypoint : forward left right</p>
 <p>light : green red</p>
 <p>left : None left right forward</p>
 <p>oncoming : None left right forward</p>
-<p>so therefore total states will be 3*2*4*4=98 states.</p>
-<p>I think 98 states is not that large, agent would be able to learn the policy for each state within a reasonable number of training trials.</p>
+<p>so therefore total states will be 3*2*4*4=96 states.</p>
+<p>I think 96 states is not that large, agent would be able to learn the policy for each state within a reasonable number of training trials.</p>
 
 </div>
 </div>
@@ -12420,10 +12420,10 @@ Reliabilty almost reached to 90% as compared to 50% with default Q-learner. That
 state = (waypoint,light,left,oncoming).</p>
 <p>Let us consider the cases for optimal policy:</p>
 <ul>
-<li>when light is 'red' : smartcab should do Nothing if waypoint is not right. If waypoint is right, then smartcab should move right only when 'left' side vehicle direction of travel is not forward and 'oncoming' vehicle is not turning left.</li>
-<li>when light is 'green' and waypoint is 'forward' : move forward only when 'left' side vehicle direction is right or None and 'oncoming' vehicle direction is forward or right or None</li>
-<li>when light is 'green' and waypoint is 'left' : move left only when 'left' side vehicle direction is right or None and 'oncoming' vehicle direction is None</li>
-<li>when light is 'green' and waypoint is 'right' : move right only when 'left' side vehicle direction is not forward and 'oncoming' vehicle is not turning left.</li>
+<li>when light is 'red' : smartcab should do Nothing if waypoint is not right. If waypoint is right, then smartcab can turn right.</li>
+<li>when light is 'green' and waypoint is 'forward' : move forward regardless of the intended directions of the nearby car.</li>
+<li>when light is 'green' and waypoint is 'left' : move left only when oncoming lane is empty or when oncoming vehicle also wants to turn left.</li>
+<li>when light is 'green' and waypoint is 'right' : smartcab can always turn right.</li>
 </ul>
 <p>Example from 'sim_improved-learning.txt' which learned the optimal policy</p>
 <p>('left', 'red', 'right', 'right')
@@ -12478,8 +12478,6 @@ state = (waypoint,light,left,oncoming).</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>agent : agent's position does not matters ie agent can be in exact same states in two different positions. Agent only cares about next waypoint and the environment inputs, not the final destination.</p>
-<p>environment : environment is dynamic i.e it is changing with time so it's not possible to predict future states.</p>
 
 </div>
 </div>
